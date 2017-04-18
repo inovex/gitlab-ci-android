@@ -15,7 +15,7 @@ ENV VERSION_BUILD_TOOLS "25.0.2"
 ENV VERSION_TARGET_SDK "25"
 
 ENV ANDROID_COMPONENTS "platform-tools,build-tools-${VERSION_BUILD_TOOLS},android-${VERSION_TARGET_SDK}"
-ENV GOOGLE_COMPONENTS "extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,extra-android-support,addon-google_apis-google-${VERSION_TARGET_SDK}"
+ENV GOOGLE_COMPONENTS "extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services"
 
 ENV ANDROID_HOME "/sdk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
@@ -47,4 +47,4 @@ RUN mkdir -p $ANDROID_HOME/licenses/
 RUN echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
 RUN echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
-RUN (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/android update sdk -u -a -t ${ANDROID_COMPONENTS},${GOOGLE_COMPONENTS}
+RUN (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/android update sdk --no-ui --all --filter ${ANDROID_COMPONENTS},${GOOGLE_COMPONENTS}
