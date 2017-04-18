@@ -1,5 +1,5 @@
 #
-# Inovex GitLab CI: Android v1.0
+# inovex GitLab CI: Android v1.0
 # SDK Tools v25.2.3
 # Build Tools: v25.0.2
 # Target SDK: 25
@@ -8,7 +8,7 @@
 #
 
 FROM ubuntu:16.04
-MAINTAINER Inovex GmbH
+LABEL maintainer inovex GmbH
 
 ENV VERSION_SDK_TOOLS "25.2.3"
 ENV VERSION_BUILD_TOOLS "25.0.2"
