@@ -1,0 +1,7 @@
+build-tools;25.0.3
+platforms;android-25
+platform-tools
+add-ons;addon-google_apis-google-24
+extras;android;m2repository
+extras;google;google_play_services
+extras;google;m2repository
