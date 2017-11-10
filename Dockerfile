@@ -37,13 +37,15 @@ RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${SDK_TOOLS
     unzip /tools.zip -d /sdk && \
     rm -v /tools.zip
 
-# licensing stuff
-RUN mkdir -p $ANDROID_HOME/licenses/
-RUN echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-RUN echo "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
-
+# Copy pkg.txt to sdk folder and create repositories.cfg
 ADD pkg.txt /sdk
-RUN mkdir -p /root/.android && \
-  touch /root/.android/repositories.cfg && \
-  ${ANDROID_HOME}/tools/bin/sdkmanager --update && \
-  (while [ 1 ]; do sleep 5; echo y; done) | ${ANDROID_HOME}/tools/bin/sdkmanager --package_file=/sdk/pkg.txt
+RUN mkdir -p /root/.android && touch /root/.android/repositories.cfg
+
+# Accept licenses
+RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
+
+# Update
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager --update 
+
+RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
+    ${ANDROID_HOME}/tools/bin/sdkmanager ${PKGS}
