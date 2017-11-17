@@ -1,7 +1,7 @@
 #
 # inovex GitLab CI: Android v1.0
 # Build Tools: v26.0.2
-# Target SDK: 26, 27
+# Platforms: 26, 27
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
 #
