@@ -1,8 +1,7 @@
 #
 # inovex GitLab CI: Android v1.0
-# SDK Tools v25.2.3
-# Build Tools: v25.0.3
-# Target SDK: 25
+# Build Tools: v26.0.2
+# Target SDK: 26, 27
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
 #
