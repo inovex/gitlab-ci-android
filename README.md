@@ -1,4 +1,7 @@
 # gitlab-ci-android
+
+https://hub.docker.com/r/inovex/gitlab-ci-android/
+
 Contains the Android SDK and common packages necessary for building Android Apps in Gitlab CI (for example).
 Make sure caching is enabled for the CI environment to speed up builds.
 
