@@ -10,8 +10,10 @@ FROM ubuntu:16.04
 LABEL maintainer inovex GmbH
 
 ENV SDK_TOOLS_VERSION "3859397"
+ENV NDK_VERSION r16b
 
 ENV ANDROID_HOME "/sdk"
+ENV ANDROID_NDK_HOME "/ndk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
 # install necessary packages
@@ -25,6 +27,8 @@ RUN apt-get -qq update && apt-get install -qqy --no-install-recommends \
     lib32z1 \
     unzip \
     curl \
+    cmake \
+    lldb \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # pre-configure some ssl certs
@@ -48,3 +52,11 @@ RUN ${ANDROID_HOME}/tools/bin/sdkmanager --update
 
 RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
     ${ANDROID_HOME}/tools/bin/sdkmanager ${PKGS}
+
+RUN mkdir /tmp/android-ndk && \
+    cd /tmp/android-ndk && \
+    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
+    unzip -q android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
+    mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
+    cd ${ANDROID_NDK_HOME} && \
+    rm -rf /tmp/android-ndk
