@@ -16,8 +16,12 @@ ENV ANDROID_HOME "/sdk"
 ENV ANDROID_NDK_HOME "/ndk"
 ENV PATH "$PATH:${ANDROID_HOME}/tools"
 
+RUN apt-get -qq update && apt-get install -y locales \
+	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.UTF-8
+
 # install necessary packages
-RUN apt-get -qq update && apt-get install -qqy --no-install-recommends \
+RUN apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
     libc6-i386 \
