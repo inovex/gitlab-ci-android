@@ -33,6 +33,7 @@ RUN apt-get install -qqy --no-install-recommends \
     curl \
     cmake \
     lldb \
+    build-essential \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # pre-configure some ssl certs
