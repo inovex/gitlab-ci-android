@@ -41,14 +41,6 @@ RUN apt-get install -qqy --no-install-recommends \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-# Install Google's repo tool version 1.23 (https://source.android.com/setup/build/downloading#installing-repo)
-RUN curl -s https://storage.googleapis.com/git-repo-downloads/repo > /tmp/repo && \
-    echo "e147f0392686c40cfd7d5e6f332c6ee74c4eab4d24e2694b3b0a0c037bf51dc5  /tmp/repo" > /tmp/repo.sha265 && \
-    sha256sum -c /tmp/repo.sha265 && \
-    rm /tmp/repo.sha265 && \
-    mv /tmp/repo /usr/bin/repo && \
-    chmod a+x /usr/bin/repo
-
 # download and unzip sdk
 RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${SDK_TOOLS_VERSION}.zip > /tools.zip && \
     unzip /tools.zip -d /sdk && \
