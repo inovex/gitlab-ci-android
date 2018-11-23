@@ -24,6 +24,7 @@ ENV LANG en_US.UTF-8
 RUN apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
+    checkstyle \
     libc6-i386 \
     lib32stdc++6 \
     lib32gcc1 \
