@@ -35,6 +35,7 @@ RUN apt-get install -qqy --no-install-recommends \
     cmake \
     lldb \
     git \
+    ninja-build \
     build-essential \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
