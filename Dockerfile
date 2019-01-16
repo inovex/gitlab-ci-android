@@ -6,7 +6,7 @@
 # https://www.inovex.de
 #
 
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 LABEL maintainer inovex GmbH
 
 ENV SDK_TOOLS_VERSION "3859397"
@@ -21,10 +21,13 @@ RUN apt-get -qq update && apt-get install -y locales \
 ENV LANG en_US.UTF-8
 
 # install necessary packages
+# prevent installation of openjdk-11-jre-headless with a trailing minus,
+# as openjdk-8-jdk can provide all requirements and will be used anyway
 RUN apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
     checkstyle \
+    openjdk-11-jre-headless- \
     libc6-i386 \
     lib32stdc++6 \
     lib32gcc1 \
