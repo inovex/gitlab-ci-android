@@ -1,7 +1,7 @@
 #
 # inovex GitLab CI: Android v1.0
-# Build Tools: v26.0.2
-# Platforms: 26, 27
+# Build Tools: v28.0.3
+# Platforms: 27, 28
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
 #
@@ -9,7 +9,7 @@
 FROM ubuntu:18.04
 LABEL maintainer inovex GmbH
 
-ENV SDK_TOOLS_VERSION "3859397"
+ENV SDK_TOOLS_VERSION "4333796"
 ENV NDK_VERSION r18b
 
 ENV ANDROID_HOME "/sdk"
@@ -62,6 +62,10 @@ RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${SDK_TOOLS
 # Copy pkg.txt to sdk folder and create repositories.cfg
 ADD pkg.txt /sdk
 RUN mkdir -p /root/.android && touch /root/.android/repositories.cfg
+
+RUN mkdir -p $ANDROID_HOME/licenses/ \
+  && echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license \
+  && echo "84831b9409646a918e30573bab4c9c91346d8abd\n504667f4c0de7af1a06de9f4b1727b84351f2910" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
 # Accept licenses
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
