@@ -1,10 +1,9 @@
 #
 # inovex GitLab CI: Android v1.0
-# Build Tools: v29.0.3
-# Platforms: 29, 30
-# NDK: r21d
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
+# For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# For JDK 8: before_script: - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 #
 
 FROM ubuntu:20.04
@@ -29,8 +28,8 @@ ENV LANG en_US.UTF-8
 RUN apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
+    openjdk-11-jdk \
     checkstyle \
-    openjdk-11-jre-headless- \
     libc6-i386 \
     lib32stdc++6 \
     lib32gcc1 \
@@ -51,7 +50,7 @@ RUN rm -f /etc/ssl/certs/java/cacerts; \
 
 # Install Google's repo tool version 1.23 (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "d73f3885d717c1dc89eba0563433cec787486a0089b9b04b4e8c56e7c07c7610  /usr/local/bin/repo" | sha256sum --strict -c - \
+ && echo "b449697154231b531b2233272b6404316b48468b438318aa2a1943d24eba5df3  /usr/local/bin/repo" | sha256sum --strict -c - \
  && chmod a+x /usr/local/bin/repo
 
 # download and unzip sdk

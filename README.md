@@ -37,6 +37,19 @@ build:
         - develop
 ```
 
+### JDK 11 / 8
+The Docker image supports both JDK 8 and 11, which is required for Gradle 7+.
+
+To use the correct version within your builds, it is recommended to define `JAVA_HOME` accordingly.
+
+```
+before_script: 
+  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+  or
+  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+```
+
+
 ## License
 
 ```
