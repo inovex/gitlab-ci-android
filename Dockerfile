@@ -9,7 +9,6 @@
 FROM ubuntu:20.04
 LABEL maintainer inovex GmbH
 
-ENV CMD_LINE_TOOLS_VERSION "6858069"
 ENV NDK_VERSION r21d
 
 ENV ANDROID_SDK_ROOT "/sdk"
@@ -53,10 +52,11 @@ RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-download
  && echo "d27de47b32949e7a92314f1d1e5e98b28d1eb37e60c396c923459d4eb70dc518 /usr/local/bin/repo" | sha256sum --strict -c - \
  && chmod a+x /usr/local/bin/repo
 
-# download and unzip sdk
-RUN curl -s https://dl.google.com/android/repository/commandlinetools-linux-${CMD_LINE_TOOLS_VERSION}_latest.zip > /tools.zip && \
-    unzip /tools.zip -d /sdk && \
-    rm -v /tools.zip
+# download and unzip latest command line tools
+RUN export CMD_LINE_TOOLS_VERSION="$(curl -s https://developer.android.com/studio/index.html | grep -oP 'commandlinetools-linux-\K\d+' | uniq)" && \
+  curl -s https://dl.google.com/android/repository/commandlinetools-linux-${CMD_LINE_TOOLS_VERSION}_latest.zip -o /tools.zip && \
+  unzip /tools.zip -d /sdk && \
+  rm -v /tools.zip
 
 # Copy pkg.txt to sdk folder and create repositories.cfg
 ADD pkg.txt /sdk
