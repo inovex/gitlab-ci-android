@@ -50,7 +50,7 @@ RUN rm -f /etc/ssl/certs/java/cacerts; \
 
 # Install Google's repo tool version 1.23 (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "b449697154231b531b2233272b6404316b48468b438318aa2a1943d24eba5df3  /usr/local/bin/repo" | sha256sum --strict -c - \
+ && echo "d27de47b32949e7a92314f1d1e5e98b28d1eb37e60c396c923459d4eb70dc518 /usr/local/bin/repo" | sha256sum --strict -c - \
  && chmod a+x /usr/local/bin/repo
 
 # download and unzip sdk
