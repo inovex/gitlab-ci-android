@@ -75,10 +75,12 @@ RUN ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --update --sdk_root=${ANDRO
 RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
     ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager ${PKGS} --sdk_root=${ANDROID_SDK_ROOT}
 
-RUN mkdir /tmp/android-ndk && \
-    cd /tmp/android-ndk && \
-    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
-    unzip -q android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
-    mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
-    cd ${ANDROID_NDK_HOME} && \
-    rm -rf /tmp/android-ndk
+# uncomment in case NDK is needed
+
+#RUN mkdir /tmp/android-ndk && \
+#    cd /tmp/android-ndk && \
+#    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
+#    unzip -q android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
+#    mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
+#    cd ${ANDROID_NDK_HOME} && \
+#    rm -rf /tmp/android-ndk
