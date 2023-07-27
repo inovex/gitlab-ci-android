@@ -3,13 +3,14 @@
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
 # For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# For JDK 11 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 8: before_script: - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 #
 
 FROM ubuntu:20.04
 LABEL maintainer inovex GmbH
 
-ENV NDK_VERSION r21d
+ENV NDK_VERSION r25c
 
 ENV ANDROID_SDK_ROOT "/sdk"
 ENV ANDROID_NDK_HOME "/ndk"
@@ -28,12 +29,8 @@ RUN apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
     openjdk-11-jdk \
+    openjdk-17-jdk \
     checkstyle \
-    libc6-i386 \
-    lib32stdc++6 \
-    lib32gcc1 \
-    lib32ncurses6 \
-    lib32z1 \
     unzip \
     curl \
     cmake \
@@ -49,7 +46,7 @@ RUN rm -f /etc/ssl/certs/java/cacerts; \
 
 # Install Google's repo tool version 1.23 (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "d27de47b32949e7a92314f1d1e5e98b28d1eb37e60c396c923459d4eb70dc518 /usr/local/bin/repo" | sha256sum --strict -c - \
+ && echo "974992a8bc1c787979f3eb7702a803b051deddc3cd75726c4de52e09e93b798d /usr/local/bin/repo" | sha256sum --strict -c - \
  && chmod a+x /usr/local/bin/repo
 
 # download and unzip latest command line tools
@@ -77,8 +74,8 @@ RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
 
 RUN mkdir /tmp/android-ndk && \
     cd /tmp/android-ndk && \
-    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
-    unzip -q android-ndk-${NDK_VERSION}-linux-x86_64.zip && \
+    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip && \
+    unzip -q android-ndk-${NDK_VERSION}-linux.zip && \
     mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
     cd ${ANDROID_NDK_HOME} && \
     rm -rf /tmp/android-ndk

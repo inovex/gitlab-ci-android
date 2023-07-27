@@ -1,6 +1,6 @@
-build-tools;30.0.2
-platforms;android-31
-platforms;android-29
+build-tools;34.0.0
+platforms;android-33
 extras;android;m2repository
 extras;google;google_play_services
 extras;google;m2repository
+add-ons;addon-google_apis-google-24
