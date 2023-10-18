@@ -1,4 +1,5 @@
 build-tools;34.0.0
+platforms;android-34
 platforms;android-33
 extras;android;m2repository
 extras;google;google_play_services
