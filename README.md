@@ -38,12 +38,14 @@ build:
 ```
 
 ### JDK Settings
-The Docker image supports JDK 8 11 and 17.
+The Docker image supports JDK 8 11, 17 and 21.
 
 To use the correct version within your builds, it is recommended to define `JAVA_HOME` accordingly.
 
 ```
 before_script: 
+  - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+  or
   - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
   or
   - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
@@ -56,7 +58,7 @@ before_script:
 
 ```
 Gitlab CI Android
-Copyright (c) 2023 inovex GmbH (https://www.inovex.de)
+Copyright (c) 2024 inovex GmbH (https://www.inovex.de)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

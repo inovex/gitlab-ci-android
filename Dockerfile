@@ -1,10 +1,11 @@
 #
-# inovex GitLab CI: Android v1.0
+# inovex GitLab CI: Android
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
-# For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-# For JDK 11 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 8: before_script: - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+# For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# For JDK 17 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+# For JDK 21 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 #
 
 FROM ubuntu:20.04
@@ -23,13 +24,12 @@ RUN apt-get -qq update && apt-get install -y locales \
 ENV LANG en_US.UTF-8
 
 # install necessary packages
-# prevent installation of openjdk-11-jre-headless with a trailing minus,
-# as openjdk-8-jdk can provide all requirements and will be used anyway
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
     apt-utils \
     openjdk-8-jdk \
     openjdk-11-jdk \
     openjdk-17-jdk \
+    openjdk-21-jdk \
     checkstyle \
     unzip \
     curl \
@@ -45,9 +45,9 @@ RUN apt-get update && apt-get install -qqy --no-install-recommends \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-# Install Google's repo tool version 1.23 (https://source.android.com/setup/build/downloading#installing-repo)
+# Install Google's repo tool (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "18ec0f6e1ac3c12293a4521a5c2224d96e4dd5ee49662cc837c2dd854ef824e5 /usr/local/bin/repo" | sha256sum --strict -c - \
+ && echo "b51be0050f55704b91439900402a4ca565f40163169d17da0c5f7a3742d4fa47 /usr/local/bin/repo" | sha256sum --strict -c - \
  && chmod a+x /usr/local/bin/repo
 
 # download and unzip latest command line tools
