@@ -25,6 +25,7 @@ ENV LANG en_US.UTF-8
 
 # install necessary packages
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
+    android-tools-adb \
     apt-utils \
     openjdk-8-jdk \
     openjdk-11-jdk \
@@ -67,7 +68,7 @@ RUN mkdir -p $ANDROID_SDK_ROOT/licenses/ \
 # Accept licenses
 RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --licenses --sdk_root=${ANDROID_SDK_ROOT}
 
-# Update
+# Update (gradle comes with the commondline tools and the gradle-wrapper is to be expected to be included in clients project)
 RUN ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --update --sdk_root=${ANDROID_SDK_ROOT}
 
 RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
