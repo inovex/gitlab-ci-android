@@ -12,6 +12,8 @@ FROM ubuntu:20.04
 LABEL maintainer inovex GmbH
 
 ENV NDK_VERSION r25c
+ENV REPO_SHA256_ARM 6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5
+ENV REPO_SHA256_X86 b51be0050f55704b91439900402a4ca565f40163169d17da0c5f7a3742d4fa47
 
 ENV ANDROID_SDK_ROOT "/sdk"
 ENV ANDROID_NDK_HOME "/ndk"
@@ -48,7 +50,12 @@ RUN rm -f /etc/ssl/certs/java/cacerts; \
 
 # Install Google's repo tool (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "b51be0050f55704b91439900402a4ca565f40163169d17da0c5f7a3742d4fa47 /usr/local/bin/repo" | sha256sum --strict -c - \
+ && ARCH=$(uname -m) \
+ && if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then \
+      echo "${REPO_SHA256_ARM} /usr/local/bin/repo" | sha256sum --strict -c -; \
+    else \
+      echo "${REPO_SHA256_X86} /usr/local/bin/repo" | sha256sum --strict -c -; \
+    fi \
  && chmod a+x /usr/local/bin/repo
 
 # download and unzip latest command line tools
