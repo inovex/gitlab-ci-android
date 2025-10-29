@@ -9,20 +9,20 @@
 #
 
 FROM ubuntu:20.04
-LABEL maintainer inovex GmbH
+LABEL maintainer="inovex GmbH"
 
-ENV NDK_VERSION r25c
-ENV REPO_SHA256 6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5
+ENV NDK_VERSION="r25c"
+ENV REPO_SHA256="6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5"
 
-ENV ANDROID_SDK_ROOT "/sdk"
-ENV ANDROID_NDK_HOME "/ndk"
-ENV PATH "$PATH:${ANDROID_SDK_ROOT}/bin"
+ENV ANDROID_SDK_ROOT="/sdk"
+ENV ANDROID_NDK_HOME="/ndk"
+ENV PATH="$PATH:${ANDROID_SDK_ROOT}/bin"
 
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get -qq update && apt-get install -y locales \
-	&& localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.UTF-8
+  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG="en_US.UTF-8"
 
 # install necessary packages
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
