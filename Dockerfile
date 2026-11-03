@@ -19,7 +19,6 @@
 
 FROM ubuntu:26.04
 LABEL maintainer="inovex GmbH"
-ENV REPO_SHA256="6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5"
 
 ENV ANDROID_SDK_ROOT="/sdk"
 ENV PATH="$PATH:${ANDROID_SDK_ROOT}/bin"
@@ -55,11 +54,6 @@ RUN rm -f /etc/ssl/certs/java/cacerts; \
 
 # 镜像内默认 JVM 用 25（sdkmanager 等工具的确定性运行环境）；CI 的 before_script 可覆盖
 ENV JAVA_HOME="/usr/lib/jvm/java-25-openjdk-amd64"
-
-# Install Google's repo tool (https://source.android.com/setup/build/downloading#installing-repo)
-RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "${REPO_SHA256} /usr/local/bin/repo" | sha256sum --strict -c - \
- && chmod a+x /usr/local/bin/repo
 
 # download and unzip latest command line tools
 RUN export CMD_LINE_TOOLS_VERSION="$(curl -s https://developer.android.com/studio/index.html | grep -oP 'commandlinetools-linux-\K\d+' | uniq)" && \
