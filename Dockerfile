@@ -1,9 +1,16 @@
 #
-# inovex GitLab CI: Android
-# https://hub.docker.com/r/inovex/gitlab-ci-android/
-# https://www.inovex.de
-# For JDK 8: before_script: - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-# For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+# inovex GitLab CI: Android —— 练天星 fork
+# upstream: https://github.com/inovex/gitlab-ci-android
+#
+# 本 fork 相对上游的改动：
+#   - 基础镜像 ubuntu:20.04 → 26.04 LTS（20.04 已 EOL）
+#   - JDK：17/21/25/26 官方源（移除 8/11；25 供 Gradle 9.5 的 daemon JVM criteria，
+#     26 为后续 Gradle 支持 26 之后的储备，当前 Gradle 9.5.1 最高支持 25）
+#   - NDK：pkg.txt 固化 ndk;28.2.13676358 装进 /sdk/ndk（CI before_script 的探测路径），
+#     移除上游 /ndk 的 r25c 下载块（CI 从未使用过它）
+#   - pkg.txt 增补 platforms;android-36 与 build-tools;36.0.0（compileSdk 36 所需）
+#
+# JAVA_HOME 用法：
 # For JDK 17 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 21 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 # For JDK 25 (Gradle 9.1+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
@@ -12,12 +19,9 @@
 
 FROM ubuntu:26.04
 LABEL maintainer="inovex GmbH"
-
-ENV NDK_VERSION="r25c"
 ENV REPO_SHA256="6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5"
 
 ENV ANDROID_SDK_ROOT="/sdk"
-ENV ANDROID_NDK_HOME="/ndk"
 ENV PATH="$PATH:${ANDROID_SDK_ROOT}/bin"
 
 ENV DEBIAN_FRONTEND="noninteractive"
@@ -30,6 +34,7 @@ ENV LANG="en_US.UTF-8"
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
     android-tools-adb \
     apt-utils \
+    openjdk-17-jdk \
     openjdk-21-jdk \
     openjdk-25-jdk \
     openjdk-26-jdk \
@@ -78,11 +83,3 @@ RUN ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --update --sdk_root=${ANDRO
 
 RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
     ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager ${PKGS} --sdk_root=${ANDROID_SDK_ROOT}
-
-RUN mkdir /tmp/android-ndk && \
-    cd /tmp/android-ndk && \
-    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip && \
-    unzip -q android-ndk-${NDK_VERSION}-linux.zip && \
-    mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
-    cd ${ANDROID_NDK_HOME} && \
-    rm -rf /tmp/android-ndk
