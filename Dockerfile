@@ -27,7 +27,7 @@ ENV PATH="$PATH:${ANDROID_SDK_ROOT}/bin"
 ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get -qq update && apt-get install -y locales \
-  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+  && localedef -i en_US -c -f UTF-8 -A /etc/locale.alias en_US.UTF-8
 ENV LANG="en_US.UTF-8"
 
 # install necessary packages
