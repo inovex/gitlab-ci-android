@@ -6,9 +6,11 @@
 # For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 # For JDK 17 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 21 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# For JDK 25 (Gradle 9.1+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+# For JDK 26 use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-26-openjdk-amd64
 #
 
-FROM ubuntu:20.04
+FROM ubuntu:26.04
 LABEL maintainer="inovex GmbH"
 
 ENV NDK_VERSION="r25c"
@@ -28,10 +30,9 @@ ENV LANG="en_US.UTF-8"
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
     android-tools-adb \
     apt-utils \
-    openjdk-8-jdk \
-    openjdk-11-jdk \
-    openjdk-17-jdk \
     openjdk-21-jdk \
+    openjdk-25-jdk \
+    openjdk-26-jdk \
     checkstyle \
     unzip \
     curl \
@@ -46,6 +47,9 @@ RUN apt-get update && apt-get install -qqy --no-install-recommends \
 # pre-configure some ssl certs
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+# 镜像内默认 JVM 用 25（sdkmanager 等工具的确定性运行环境）；CI 的 before_script 可覆盖
+ENV JAVA_HOME="/usr/lib/jvm/java-25-openjdk-amd64"
 
 # Install Google's repo tool (https://source.android.com/setup/build/downloading#installing-repo)
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
