@@ -34,4 +34,4 @@ docker run --rm --platform linux/amd64 gitlab-ci-android sdkmanager --list_insta
 
 - Base image is `ubuntu:26.04`. It ships no `locale.alias`, so `localedef` runs without `-A`.
 - The JDK list appears in the Dockerfile header comment and in `README.md`; keep both in sync when changing JDKs.
-- Record every user-visible image change (especially breaking ones) under `## Unreleased` in `CHANGELOG.md`, not in `README.md`.
+- Record every user-visible image change (especially breaking ones) under `## Unreleased` in `CHANGELOG.md` (create it above the latest release; releases are headed `## <docker tag> - <date>`), not in `README.md`.

@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 27 - 2026-11-04
+
+Docker tags: `inovex/gitlab-ci-android:27`, `inovex/gitlab-ci-android:latest`
 
 ### Breaking changes
 - JDK 8 and 11 were removed.
