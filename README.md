@@ -38,19 +38,27 @@ build:
 ```
 
 ### JDK Settings
-The Docker image supports JDK 8 11, 17 and 21.
+The Docker image supports JDK 17, 21, 25 and 26. The default `JAVA_HOME` is JDK 25.
 
 To use the correct version within your builds, it is recommended to define `JAVA_HOME` accordingly.
 
 ```
 before_script: 
+  - export JAVA_HOME=/usr/lib/jvm/java-26-openjdk-amd64
+  or
+  - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+  or
   - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
   or
   - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-  or
-  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-  or
-  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+```
+
+### Building the image
+The image targets `linux/amd64` only (the Android SDK build-tools and NDK for Linux ship x86_64 binaries).
+On Apple Silicon Macs, pass the platform explicitly, otherwise the build fails with `JAVA_HOME is set to an invalid directory`:
+
+```
+docker build --platform linux/amd64 -t gitlab-ci-android .
 ```
 
 
