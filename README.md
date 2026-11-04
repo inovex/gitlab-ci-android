@@ -62,6 +62,21 @@ On Apple Silicon Macs, pass the platform explicitly, otherwise the build fails w
 docker build --platform linux/amd64 -t gitlab-ci-android .
 ```
 
+### Releasing (maintainers)
+Releases are numbered Docker tags (`26`, `27`, ...) plus `latest`.
+
+1. Move the `## Unreleased` entries in [CHANGELOG.md](CHANGELOG.md) under `## <tag> - <date>` and merge to `main`.
+2. Build and push from an up-to-date `main`:
+
+```
+git checkout main && git pull
+docker login
+docker buildx build --platform linux/amd64 \
+  -t inovex/gitlab-ci-android:<tag> \
+  -t inovex/gitlab-ci-android:latest \
+  --push .
+```
+
 
 ## License
 
