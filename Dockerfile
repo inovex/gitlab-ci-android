@@ -2,36 +2,33 @@
 # inovex GitLab CI: Android
 # https://hub.docker.com/r/inovex/gitlab-ci-android/
 # https://www.inovex.de
-# For JDK 8: before_script: - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-# For JDK 11 (Gradle 7+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 # For JDK 17 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 21 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# For JDK 25 (Gradle 9.1+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
+# For JDK 26 (Gradle 9.4+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-26-openjdk-amd64
 #
 
-FROM ubuntu:20.04
+FROM ubuntu:26.04
 LABEL maintainer="inovex GmbH"
 
-ENV NDK_VERSION="r25c"
-ENV REPO_SHA256="6cba294d6218bbd4a1500598207b3979c752c7a122aef9429e4d7fef688833b5"
-
+ENV ANDROID_HOME="/sdk"
 ENV ANDROID_SDK_ROOT="/sdk"
-ENV ANDROID_NDK_HOME="/ndk"
-ENV PATH="$PATH:${ANDROID_SDK_ROOT}/bin"
+ENV PATH="$PATH:${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin"
 
 ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get -qq update && apt-get install -y locales \
-  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+  && localedef -i en_US -c -f UTF-8 en_US.UTF-8
 ENV LANG="en_US.UTF-8"
 
 # install necessary packages
 RUN apt-get update && apt-get install -qqy --no-install-recommends \
     android-tools-adb \
     apt-utils \
-    openjdk-8-jdk \
-    openjdk-11-jdk \
     openjdk-17-jdk \
     openjdk-21-jdk \
+    openjdk-25-jdk \
+    openjdk-26-jdk \
     checkstyle \
     unzip \
     curl \
@@ -47,16 +44,19 @@ RUN apt-get update && apt-get install -qqy --no-install-recommends \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-# Install Google's repo tool (https://source.android.com/setup/build/downloading#installing-repo)
-RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo \
- && echo "${REPO_SHA256} /usr/local/bin/repo" | sha256sum --strict -c - \
- && chmod a+x /usr/local/bin/repo
+# Default JVM for sdkmanager during the build; CI jobs can override it in before_script
+ENV JAVA_HOME="/usr/lib/jvm/java-25-openjdk-amd64"
+# Point java/javac on PATH at the same JDK as JAVA_HOME (apt would pick the highest installed version)
+RUN update-alternatives --set java ${JAVA_HOME}/bin/java \
+  && update-alternatives --set javac ${JAVA_HOME}/bin/javac
 
 # download and unzip latest command line tools
-RUN export CMD_LINE_TOOLS_VERSION="$(curl -s https://developer.android.com/studio/index.html | grep -oP 'commandlinetools-linux-\K\d+' | uniq)" && \
-  curl -s https://dl.google.com/android/repository/commandlinetools-linux-${CMD_LINE_TOOLS_VERSION}_latest.zip -o /tools.zip && \
-  unzip /tools.zip -d /sdk && \
-  rm -v /tools.zip
+RUN export CMD_LINE_TOOLS_VERSION="$(curl -fsSL https://developer.android.com/studio/index.html | grep -oP 'commandlinetools-linux-\K\d+' | sort -un | tail -n 1)" && \
+  : "${CMD_LINE_TOOLS_VERSION:?could not determine command line tools version}" && \
+  curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-${CMD_LINE_TOOLS_VERSION}_latest.zip -o /tools.zip && \
+  unzip /tools.zip -d /tmp/cmdline-tools && \
+  mkdir -p /sdk/cmdline-tools && mv /tmp/cmdline-tools/cmdline-tools /sdk/cmdline-tools/latest && \
+  rm -rv /tools.zip /tmp/cmdline-tools
 
 # Copy pkg.txt to sdk folder and create repositories.cfg
 ADD pkg.txt /sdk
@@ -67,18 +67,10 @@ RUN mkdir -p $ANDROID_SDK_ROOT/licenses/ \
   && echo "84831b9409646a918e30573bab4c9c91346d8abd\n504667f4c0de7af1a06de9f4b1727b84351f2910" > $ANDROID_SDK_ROOT/licenses/android-sdk-preview-license
 
 # Accept licenses
-RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --licenses --sdk_root=${ANDROID_SDK_ROOT}
+RUN yes | ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --licenses --sdk_root=${ANDROID_SDK_ROOT}
 
 # Update (gradle comes with the commondline tools and the gradle-wrapper is to be expected to be included in clients project)
-RUN ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager --update --sdk_root=${ANDROID_SDK_ROOT}
+RUN ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --update --sdk_root=${ANDROID_SDK_ROOT}
 
 RUN while read -r pkg; do PKGS="${PKGS}${pkg} "; done < /sdk/pkg.txt && \
-    ${ANDROID_SDK_ROOT}/cmdline-tools/bin/sdkmanager ${PKGS} --sdk_root=${ANDROID_SDK_ROOT}
-
-RUN mkdir /tmp/android-ndk && \
-    cd /tmp/android-ndk && \
-    curl -s -O https://dl.google.com/android/repository/android-ndk-${NDK_VERSION}-linux.zip && \
-    unzip -q android-ndk-${NDK_VERSION}-linux.zip && \
-    mv ./android-ndk-${NDK_VERSION} ${ANDROID_NDK_HOME} && \
-    cd ${ANDROID_NDK_HOME} && \
-    rm -rf /tmp/android-ndk
+    ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager ${PKGS} --sdk_root=${ANDROID_SDK_ROOT}

@@ -32,25 +32,49 @@ build:
     artifacts:
         expire_in: 2 weeks
         paths:
-            - app/build/outputs/apk/*.apk
-    only:
-        - develop
+            - app/build/outputs/apk/**/*.apk
+    rules:
+        - if: $CI_COMMIT_BRANCH == "develop"
 ```
 
 ### JDK Settings
-The Docker image supports JDK 8 11, 17 and 21.
+The Docker image supports JDK 17, 21, 25 and 26. The default `JAVA_HOME` and the `java`/`javac` on `PATH` are JDK 25.
 
 To use the correct version within your builds, it is recommended to define `JAVA_HOME` accordingly.
 
 ```
-before_script: 
+before_script:
   - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
-  or
-  - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-  or
-  - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-  or
-  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  # or java-17-openjdk-amd64, java-25-openjdk-amd64, java-26-openjdk-amd64
+```
+
+### NDK
+The NDK version listed in [`pkg.txt`](pkg.txt) is installed via `sdkmanager` into `/sdk/ndk/<version>`, where the Android Gradle Plugin finds it through `ndkVersion`.
+
+### Changes
+See [CHANGELOG.md](CHANGELOG.md), including breaking changes.
+
+### Building the image
+The image targets `linux/amd64` only (the Android SDK build-tools and NDK for Linux ship x86_64 binaries).
+On Apple Silicon Macs, pass the platform explicitly, otherwise the build fails with `JAVA_HOME is set to an invalid directory`:
+
+```
+docker build --platform linux/amd64 -t gitlab-ci-android .
+```
+
+### Releasing (maintainers)
+Releases are numbered Docker tags (`26`, `27`, ...) plus `latest`.
+
+1. Move the `## Unreleased` entries in [CHANGELOG.md](CHANGELOG.md) under `## <tag> - <date>` and merge to `main`.
+2. Build and push from an up-to-date `main`:
+
+```
+git checkout main && git pull
+docker login
+docker buildx build --platform linux/amd64 \
+  -t inovex/gitlab-ci-android:<tag> \
+  -t inovex/gitlab-ci-android:latest \
+  --push .
 ```
 
 
@@ -58,7 +82,7 @@ before_script:
 
 ```
 Gitlab CI Android
-Copyright (c) 2024 inovex GmbH (https://www.inovex.de)
+Copyright (c) 2026 inovex GmbH (https://www.inovex.de)
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
