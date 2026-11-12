@@ -1,6 +1,6 @@
 # gitlab-ci-android
 
-https://hub.docker.com/r/inovex/gitlab-ci-android/
+https://hub.docker.com/r/inovexgmbh/gitlab-ci-android/
 
 Contains the Android SDK, NDK and common packages necessary for building Android Apps in Gitlab CI (for example).
 Make sure caching is enabled for the CI environment to speed up builds.
@@ -8,7 +8,7 @@ Make sure caching is enabled for the CI environment to speed up builds.
 Example yml which has dependency caching enabled:
 
 ```
-image: inovex/gitlab-ci-android
+image: inovexgmbh/gitlab-ci-android
 
 stages:
 - release
@@ -63,7 +63,7 @@ docker build --platform linux/amd64 -t gitlab-ci-android .
 ```
 
 ### Releasing (maintainers)
-Releases are numbered Docker tags (`26`, `27`, ...) plus `latest`.
+Releases are numbered Docker tags (`1`, `2`, ...) plus `latest`.
 
 1. Move the `## Unreleased` entries in [CHANGELOG.md](CHANGELOG.md) under `## <tag> - <date>` and merge to `main`.
 2. Build and push from an up-to-date `main`:
@@ -72,8 +72,8 @@ Releases are numbered Docker tags (`26`, `27`, ...) plus `latest`.
 git checkout main && git pull
 docker login
 docker buildx build --platform linux/amd64 \
-  -t inovex/gitlab-ci-android:<tag> \
-  -t inovex/gitlab-ci-android:latest \
+  -t inovexgmbh/gitlab-ci-android:<tag> \
+  -t inovexgmbh/gitlab-ci-android:latest \
   --push .
 ```
 
