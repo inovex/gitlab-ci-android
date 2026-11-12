@@ -1,6 +1,6 @@
 #
 # inovex GitLab CI: Android
-# https://hub.docker.com/r/inovex/gitlab-ci-android/
+# https://hub.docker.com/r/inovexgmbh/gitlab-ci-android/
 # https://www.inovex.de
 # For JDK 17 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 # For JDK 21 (Gradle 8+) use: before_script: - export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64

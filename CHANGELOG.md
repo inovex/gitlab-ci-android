@@ -1,5 +1,15 @@
 # Changelog
 
+## 1 - 2026-11-12
+
+Docker tags: `inovexgmbh/gitlab-ci-android:1`, `inovexgmbh/gitlab-ci-android:latest`
+
+### Breaking changes
+- The image moved to the Docker Hub repository `inovexgmbh/gitlab-ci-android`. Tag numbering restarts at `1`. Update `image:` in your CI config; `inovex/gitlab-ci-android` receives no further updates.
+
+### Changed
+- Image content is identical to `inovex/gitlab-ci-android:27`.
+
 ## 27 - 2026-11-04
 
 Docker tags: `inovex/gitlab-ci-android:27`, `inovex/gitlab-ci-android:latest`

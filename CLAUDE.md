@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Source for the Docker image `inovex/gitlab-ci-android` (https://hub.docker.com/r/inovex/gitlab-ci-android/): Ubuntu + multiple JDKs + Android SDK/NDK for building Android apps in GitLab CI. The whole product is `Dockerfile` plus `pkg.txt`. There is no application code, no test suite, and no CI config in the repo.
+Source for the Docker image `inovexgmbh/gitlab-ci-android` (https://hub.docker.com/r/inovexgmbh/gitlab-ci-android/): Ubuntu + multiple JDKs + Android SDK/NDK for building Android apps in GitLab CI. The whole product is `Dockerfile` plus `pkg.txt`. There is no application code, no test suite, and no CI config in the repo.
 
 ## Build and verify
 
